@@ -1,0 +1,3 @@
+Lillian Hong (ch745) and Jake Sanders (jas2223)
+
+There are issues with Triangle intersection and mirror reflection, specifically that the mirror reflection does not bounce off the floor and extend past certain boundaries (potentially because of a failure to recurse). Even after a TA searched with us for two hours during office hours, we were unable to find the root of our issues, as the Triangle implementation passed all test cases and our mirror calculations were compared very closely with the solution implementation. We plan on taking another late day to continue attempting to sort out the problems, potentially by reimplementing Triangle from scratch. 
