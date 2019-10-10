@@ -35,7 +35,7 @@ public class BboxUtils {
 	public static void sphereBBox(Sphere s) {
 		// Ray Part 2 Task 1: Compute Bounding Box for a Sphere
 		// Compute s.minBound, s.maxBound, s.averagePosition
-		s.averagePosition = s.getCenter();
+		s.averagePosition = new Vector3d(s.getCenter());
 
 		s.minBound = s.averagePosition.clone().sub(s.getRadius());
 		

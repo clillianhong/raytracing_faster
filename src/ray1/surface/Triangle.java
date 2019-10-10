@@ -61,7 +61,7 @@ public class Triangle extends Surface {
    */
   public Vector3 getVertex(int vertexNum) {
     if(vertexNum < 0 || vertexNum > 2) return null;
-    return owner.getMesh.getPosition(face, vertexNum);
+    return owner.getMesh().getPosition(face, vertexNum);
   }
 
   /**

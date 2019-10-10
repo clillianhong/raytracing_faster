@@ -66,7 +66,7 @@ public class Bvh implements AccelStruct {
 		
 		// ==== Step 1 ====
 		// Check whether the ray intersect with the current node's bounding box, if not return false
-		if(!node.intersect(rayIn)) {
+		if(!node.intersects(rayIn)) {
 			return false;
 		}
 		
@@ -94,8 +94,8 @@ public class Bvh implements AccelStruct {
 	    } else {
 			IntersectionRecord leftRecord = new IntersectionRecord();
 			IntersectionRecord rightRecord = new IntersectionRecord();
-			boolean left = intersectHelper(node[0], leftRecord, rayIn, anyIntersection);
-			boolean right = intersectHelper(node[1], rightRecord, rayIn, anyIntersection);
+			boolean left = intersectHelper(node.child[0], leftRecord, rayIn, anyIntersection);
+			boolean right = intersectHelper(node.child[1], rightRecord, rayIn, anyIntersection);
 			if(left && right) {
 				outRecord.set(leftRecord.t <= rightRecord.t ? leftRecord : rightRecord);
 				intersection = true;
@@ -123,7 +123,7 @@ public class Bvh implements AccelStruct {
 		System.out.println("Bvh: average child volume ratio " + volRatio(root).mean);
 	}
 
-	private class SurfaceComparator extends Comparator<Surface> {
+	private class SurfaceComparator implements Comparator<Surface> {
 		public final int dim;
 
 		public SurfaceComparator(int dim) {
@@ -132,11 +132,11 @@ public class Bvh implements AccelStruct {
 
 		public int compare(Surface s1, Surface s2) {
 			if(dim == 0) {
-				return s1.x - s2.x;
+				return (int)(s1.getAveragePosition().x - s2.getAveragePosition().x);
 			} else if(dim == 1) {
-				return s1.y - s2.y;
+				return (int)(s1.getAveragePosition().y - s2.getAveragePosition().y);
 			} else {
-				return s1.z - s2.z;
+				return (int)(s1.getAveragePosition().z - s2.getAveragePosition().z);
 			}
 		}
 	}
@@ -222,7 +222,7 @@ public class Bvh implements AccelStruct {
 		
 		// Copy our array, sort that, then copy that array back to the original
 		SurfaceComparator comparator = new SurfaceComparator(widestDim);
-		Surfaces[] surfacesSlice = Arrays.copyOfRange(surfaces, start, end + 1); // exclusive end
+		Surface[] surfacesSlice = Arrays.copyOfRange(surfaces, start, end + 1); // exclusive end
 		Arrays.sort(surfacesSlice, comparator);
 		for(int i = start; i <= end; i++) {
 			surfaces[i] = surfacesSlice[i - start];
