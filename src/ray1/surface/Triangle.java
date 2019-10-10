@@ -54,6 +54,17 @@ public class Triangle extends Surface {
   }
 
   /**
+   * Gets the corresponding vertex from the mesh. If vertexNum isn't 0, 1, or 2,
+   * null is returned
+   * 
+   * @return The vertex of the triangle at the specified index.
+   */
+  public Vector3 getVertex(int vertexNum) {
+    if(vertexNum < 0 || vertexNum > 2) return null;
+    return owner.getMesh.getPosition(face, vertexNum);
+  }
+
+  /**
    * Tests this surface for intersection with ray. If an intersection is found
    * record is filled out with the information about the intersection and the
    * method returns true. It returns false otherwise and the information in

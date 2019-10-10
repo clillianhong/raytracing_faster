@@ -91,6 +91,24 @@ public class Bvh implements AccelStruct {
 		System.out.println("Bvh: max depth " + maxDepth(root));
 		System.out.println("Bvh: average child volume ratio " + volRatio(root).mean);
 	}
+
+	private class SurfaceComparator extends Comparator<Surface> {
+		public final int dim;
+
+		public SurfaceComparator(int dim) {
+			this.dim = (dim == 2 ? 2 : dim == 1 ? 1 : 0);
+		}
+
+		public int compare(Surface s1, Surface s2) {
+			if(dim == 0) {
+				return s1.x - s2.x;
+			} else if(dim == 1) {
+				return s1.y - s2.y;
+			} else {
+				return s1.z - s2.z;
+			}
+		}
+	}
 	
 	/**
 	 * Create a BVH [sub]tree.  This tree node will be responsible for storing
@@ -103,32 +121,87 @@ public class Bvh implements AccelStruct {
 	 * @param end The end index of surfaces
 	 */
 	private BvhNode createTree(int start, int end) {
-		// TODO#Ray Part 2 Task 2: fill in this function.
+		// Ray Part 2 Task 2: fill in this function.
 
 		// ==== Step 1 ====
 		// Find out the BIG bounding box enclosing all the surfaces in the range [start, end)
 		// and store them in minB and maxB.
 		// Hint: To find the bounding box for each surface, use getMinBound() and getMaxBound() */
 
+		Vector3d minBound = new Vector3d(Double.POSITIVE_INFINITY);
+		Vector3d maxBound = new Vector3d(Double.NEGATIVE_INFINITY);
+		// Less than or equal because end is the right most, and is included in the array
+		for(int i = start; i <= end; i++) { 
+			if(minBound.x > surfaces[i].getMinBound().x) {
+				minBound.x = surfaces[i].getMinBound().x;
+			}
+			if(minBound.y > surfaces[i].getMinBound().y) {
+				minBound.y = surfaces[i].getMinBound().y;
+			}
+			if(minBound.z > surfaces[i].getMinBound().z) {
+				minBound.z = surfaces[i].getMinBound().z;
+			}
+
+			if(maxBound.x < surfaces[i].getMaxBound().x) {
+				maxBound.x = surfaces[i].getMaxBound().x;
+			}
+			if(maxBound.y < surfaces[i].getMaxBound().y) {
+				maxBound.y = surfaces[i].getMaxBound().y;
+			}
+			if(maxBound.z < surfaces[i].getMaxBound().z) {
+				maxBound.z = surfaces[i].getMaxBound().z;
+			}
+		}
+
 		// ==== Step 2 ====
 		// Check for the base case. 
 		// If the range [start, end) is small enough (e.g. less than or equal to 10), just return a new leaf node.
-
+		if(end - start <= 10) {
+			BvhNode node = new BvhNode(minBound, maxBound, null, null, start, end);
+			if(root == null) root = node;
+			return node;
+		}
 		
 		// ==== Step 3 ====
 		// Figure out the widest dimension (x or y or z).
 		// If x is the widest, set widestDim = 0. If y, set widestDim = 1. If z, set widestDim = 2.
 
+		double widthX = maxBound.x - minBound.x;
+		double widthY = maxBound.y - minBound.y;
+		double widthZ = maxBound.z - minBound.z;
+
+		int widestDim;
+
+		if(widthX >= widthY) {
+			if(widthX >= widthZ) { // X >= Y & Z
+				widestDim = 0;
+			} else { // Z > X >= Y
+				widestDim = 2;
+			}
+		} else {
+			if(widthY >= widthZ) { // Y >= X & Z
+				widestDim = 1;
+			} else { // Z > Y > X
+				widestDim = 2;
+			}
+		}
 		
 		// ==== Step 4 ====
 		// Sort surfaces according to the widest dimension.
-
+		
+		// Copy our array, sort that, then copy that array back to the original
+		SurfaceComparator comparator = new SurfaceComparator(widestDim);
+		Surfaces[] surfacesSlice = Arrays.copyOfRange(surfaces, start, end + 1); // exclusive end
+		Arrays.sort(surfacesSlice, comparator);
+		for(int i = start; i <= end; i++) {
+			surfaces[i] = surfacesSlice[i - start];
+		}
 
 		// ==== Step 5 ====
 		// Recursively create left and right children.
-
-
-		return root;
+		BvhNode node = new BvhNode(minBound, maxBound, createTree(start, (start + end) / 2), createTree((start + end) / 2 + 1, end), start, end);
+		if(root == null) root = node;
+		return node;
 	}
 	
 	private int maxDepth(BvhNode node) {

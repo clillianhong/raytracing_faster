@@ -12,18 +12,34 @@ public class BboxUtils {
 	 * Computing Bounding box for a triangle
 	 * */
 	public static void triangleBBox(Triangle t) {
-		// TODO#Ray Part 2 Task 1: Compute Bounding Box for a triangle:
+		// Ray Part 2 Task 1: Compute Bounding Box for a triangle:
 		// Compute t.minBound, t.maxBound, t.averagePosition
+		double xMin, xMax, yMin, yMax, zMin, zMax;
 
+		xMin = Math.min(t.getVertex(0).x, Math.min(t.getVertex(1).x, t.getVertex(2).x));
+		yMin = Math.min(t.getVertex(0).y, Math.min(t.getVertex(1).y, t.getVertex(2).y)); 
+		zMin = Math.min(t.getVertex(0).z, Math.min(t.getVertex(1).z, t.getVertex(2).z)); 
+		t.minBound = new Vector3d(xMin, yMin, zMin);
+
+		xMax = Math.max(t.getVertex(0).x, Math.max(t.getVertex(1).x, t.getVertex(2).x));
+		yMax = Math.max(t.getVertex(0).y, Math.max(t.getVertex(1).y, t.getVertex(2).y)); 
+		zMax = Math.max(t.getVertex(0).z, Math.max(t.getVertex(1).z, t.getVertex(2).z));  
+		t.maxBound = new Vector3d(xMax, yMax, zMax);
+
+		t.averagePosition = new Vector3d((xMin + xMax) / 2.0, (yMin + yMax) / 2.0, (zMin + zMax) / 2.0);
 	}
 	
 	/**
 	 * Computing Bounding box for a sphere
 	 * */
 	public static void sphereBBox(Sphere s) {
-		// TODO#Ray Part 2 Task 1: Compute Bounding Box for a Sphere
+		// Ray Part 2 Task 1: Compute Bounding Box for a Sphere
 		// Compute s.minBound, s.maxBound, s.averagePosition
-			
+		s.averagePosition = s.getCenter();
+
+		s.minBound = s.averagePosition.clone().sub(s.getRadius());
+		
+		s.maxBound = s.averagePosition.clone().add(s.getRadius());
 	}
 	
 	/**
