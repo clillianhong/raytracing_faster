@@ -162,7 +162,7 @@ public class Bvh implements AccelStruct {
 		Vector3d minBound = new Vector3d(Double.POSITIVE_INFINITY);
 		Vector3d maxBound = new Vector3d(Double.NEGATIVE_INFINITY);
 		// Less than or equal because end is the right most, and is included in the array
-		for(int i = start; i <= end; i++) { 
+		for(int i = start; i < end; i++) { 
 			if(minBound.x > surfaces[i].getMinBound().x) {
 				minBound.x = surfaces[i].getMinBound().x;
 			}
@@ -187,7 +187,7 @@ public class Bvh implements AccelStruct {
 		// ==== Step 2 ====
 		// Check for the base case. 
 		// If the range [start, end) is small enough (e.g. less than or equal to 10), just return a new leaf node.
-		if(end - start <= 10) {
+		if((end - 1) - start <= 10) {
 			BvhNode node = new BvhNode(minBound, maxBound, null, null, start, end);
 			if(root == null) root = node;
 			return node;
@@ -222,15 +222,15 @@ public class Bvh implements AccelStruct {
 		
 		// Copy our array, sort that, then copy that array back to the original
 		SurfaceComparator comparator = new SurfaceComparator(widestDim);
-		Surface[] surfacesSlice = Arrays.copyOfRange(surfaces, start, end + 1); // exclusive end
+		Surface[] surfacesSlice = Arrays.copyOfRange(surfaces, start, end);
 		Arrays.sort(surfacesSlice, comparator);
-		for(int i = start; i <= end; i++) {
+		for(int i = start; i < end; i++) {
 			surfaces[i] = surfacesSlice[i - start];
 		}
 
 		// ==== Step 5 ====
 		// Recursively create left and right children.
-		BvhNode node = new BvhNode(minBound, maxBound, createTree(start, (start + end) / 2), createTree((start + end) / 2 + 1, end), start, end);
+		BvhNode node = new BvhNode(minBound, maxBound, createTree(start, (int)Math.ceil((start + end) / 2.0)), createTree((int)Math.ceil((start + end) / 2.0), end), start, end);
 		if(root == null) root = node;
 		return node;
 	}

@@ -104,6 +104,6 @@ public class BvhNode {
 		// tEnter <= t <= tExit
 		// max(tEnter) <= t <= min(tExit)
 
-		return Math.max(txEnter, Math.max(tyEnter, tzEnter)) <= Math.min(txEnter, Math.min(tyEnter, tzEnter));
+		return Math.max(txEnter, Math.max(tyEnter, tzEnter)) <= Math.min(txExit, Math.min(tyExit, tzExit));
 	}
 }

@@ -26,7 +26,10 @@ public class BboxUtils {
 		zMax = Math.max(t.getVertex(0).z, Math.max(t.getVertex(1).z, t.getVertex(2).z));  
 		t.maxBound = new Vector3d(xMax, yMax, zMax);
 
-		t.averagePosition = new Vector3d((xMin + xMax) / 2.0, (yMin + yMax) / 2.0, (zMin + zMax) / 2.0);
+		t.averagePosition = new Vector3d((t.getVertex(0).x + t.getVertex(1).x + t.getVertex(2).x) / 3.0,
+		                                 (t.getVertex(0).y + t.getVertex(1).y + t.getVertex(2).y) / 3.0,
+		                                 (t.getVertex(0).z + t.getVertex(1).z + t.getVertex(2).z) / 3.0);
+//		t.averagePosition = new Vector3d((xMin + xMax) / 2.0, (yMin + yMax) / 2.0, (zMin + zMax) / 2.0);
 	}
 	
 	/**
