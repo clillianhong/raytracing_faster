@@ -85,8 +85,25 @@ public class BvhNode {
 	public boolean intersects(Ray ray) {
 		// TODO#Ray Part 2 Task 3: fill in this function.
 		// You can find this in the slides.
-		
+		double txMin = (minBound.x - ray.origin.x) / ray.direction.x;
+		double tyMin = (minBound.y - ray.origin.y) / ray.direction.y;
+		double tzMin = (minBound.z - ray.origin.z) / ray.direction.z;
 
-		return false;
+		double txMax = (maxBound.x - ray.origin.x) / ray.direction.x;
+		double tyMax = (maxBound.y - ray.origin.y) / ray.direction.y;
+		double tzMax = (maxBound.z - ray.origin.z) / ray.direction.z;
+
+		double txEnter = Math.min(txMin, txMax);
+		double tyEnter = Math.min(tyMin, tyMax);
+		double tzEnter = Math.min(tzMin, tzMax);
+
+		double txExit = Math.max(txMin, txMax);
+		double tyExit = Math.max(tyMin, tyMax);
+		double tzExit = Math.max(tzMin, tzMax);
+
+		// tEnter <= t <= tExit
+		// max(tEnter) <= t <= min(tExit)
+
+		return Math.max(txEnter, Math.max(tyEnter, tzEnter)) <= Math.min(txEnter, Math.min(tyEnter, tzEnter));
 	}
 }

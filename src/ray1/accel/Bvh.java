@@ -66,17 +66,48 @@ public class Bvh implements AccelStruct {
 		
 		// ==== Step 1 ====
 		// Check whether the ray intersect with the current node's bounding box, if not return false
-
-
-		
+		if(!node.intersect(rayIn)) {
+			return false;
+		}
 		
 		// ==== Step 2 ====
 		// Check if current node is leaf
 		// If current node is leaf, loop over all the surface in this leaf, do surface intersection check, find the first intersection
 		// If current node is not a leaf, call intersectHelper recursively for left and right child of the node, 
-		
-		boolean ret = false;
-		return ret;
+		boolean intersection = false;
+		if(node.isLeaf()) {
+			double tMin = rayIn.end;
+			IntersectionRecord tempRecord = new IntersectionRecord();
+
+			for(Surface surface : surfaces) {
+				if(anyIntersection) {
+					if(surface.intersect(null, rayIn)) return true;
+				} 
+				else {
+					if(surface.intersect(tempRecord, rayIn) && tempRecord.t < tMin) {
+						tMin = tempRecord.t;
+						outRecord.set(tempRecord);
+						intersection = true;
+					}
+				}
+			}
+	    } else {
+			IntersectionRecord leftRecord = new IntersectionRecord();
+			IntersectionRecord rightRecord = new IntersectionRecord();
+			boolean left = intersectHelper(node[0], leftRecord, rayIn, anyIntersection);
+			boolean right = intersectHelper(node[1], rightRecord, rayIn, anyIntersection);
+			if(left && right) {
+				outRecord.set(leftRecord.t <= rightRecord.t ? leftRecord : rightRecord);
+				intersection = true;
+			} else if(left) {
+				outRecord.set(leftRecord);
+				intersection = true;
+			} else if(right) {
+				outRecord.set(rightRecord);
+				intersection = true;
+			}
+		}
+		return intersection;
 	}
 
 
