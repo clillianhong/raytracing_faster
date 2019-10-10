@@ -42,7 +42,6 @@ public abstract class ReflectionShader extends Shader {
 		outgoing.set(ray.origin).sub(record.location).normalize();
 		Vector3d surfaceNormal = record.normal;
 		Vector2 texCoords = new Vector2(record.texCoords);
-//		System.out.println(texCoords.toString());
 		
 		Colorf BRDFVal = new Colorf();
 		

@@ -7,6 +7,7 @@ import egl.math.Vector3;
 import egl.math.Vector2;
 import ray1.OBJMesh;
 import ray1.OBJFace;
+import ray1.accel.BboxUtils;
 
 /**
  * A class that represents an Axis-Aligned box. When the scene is built, the Box is
@@ -23,10 +24,12 @@ public class Box extends Surface {
   /* The corner of the box with the smallest x, y, and z components. */
   protected final Vector3 minPt = new Vector3();
   public void setMinPt(Vector3 minPt) { this.minPt.set(minPt); }
+  public Vector3 getMinPt() {return this.minPt.clone();};
   
   /* The corner of the box with the largest x, y, and z components. */
   protected final Vector3 maxPt = new Vector3();
   public void setMaxPt(Vector3 maxPt) { this.maxPt.set(maxPt); }
+  public Vector3 getMaxPt() {return this.maxPt.clone();}
   
   /* Generate a Triangle mesh that represents this Box. */
   private void buildMesh() {
@@ -132,12 +135,10 @@ public class Box extends Surface {
   }
   
   public boolean intersect(IntersectionRecord outRecord, Ray ray) {
-	  System.out.println("entering");
 		for(int i = 0; i< mesh.getMesh().faces.size();i++) {
 			OBJFace tface = mesh.getMesh().faces.get(i);
 			Triangle triangle = new Triangle(this.mesh, tface, this.shader);
 			if(triangle.intersect(outRecord, ray)) {
-				System.out.println("intersection");
 				return true;
 			}
 		}; 
@@ -149,6 +150,9 @@ public class Box extends Surface {
 	  mesh.appendRenderableSurfaces(in);
   }
   
+  public void computeBoundingBox() {
+	    BboxUtils.boxBBox(this);
+	  }
   
   /**
    * @see Object#toString()

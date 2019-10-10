@@ -10,6 +10,8 @@ import ray1.shader.Shader;
 import ray1.surface.Surface;
 import ray1.shader.Texture;
 import ray1.shader.BRDF;
+import ray1.accel.AccelStruct;
+import ray1.accel.Bvh;
 
 /**
  * The scene is just a collection of objects that compose a scene. The camera,
@@ -74,6 +76,11 @@ public class Scene {
 	public Image getImage() { return this.outputImage; }
 	public void setImage(Image outputImage) { this.outputImage = outputImage; }
 	
+	/** The acceleration structure **/
+	protected AccelStruct accelStruct = new Bvh();
+	public void setAccelStruct(AccelStruct accelStruct) { this.accelStruct = accelStruct; }
+	public AccelStruct getAccelStruct() { return accelStruct; }
+	
 	/**
 	* Initialize method
 	*/
@@ -85,6 +92,9 @@ public class Scene {
 			iter.next().appendRenderableSurfaces(renderableSurfaces);
 		}
 		setSurfaces(renderableSurfaces);
+		Surface surfaceArray[] = new Surface[renderableSurfaces.size()];
+		renderableSurfaces.toArray(surfaceArray);
+		getAccelStruct().build(surfaceArray);
 		
 		// initialize camera
 		getCamera().init();
@@ -121,12 +131,7 @@ public class Scene {
 	 * @return true if and intersection is found.
 	 */
 	public boolean getFirstIntersection(IntersectionRecord outRecord, Ray ray) {
-		if(intersect(outRecord, ray, false)) {
-//			System.out.println(outRecord.surface + ": " + true);
-			return true;
-		}
-//		System.out.println(outRecord.surface + ": " + false);
-		return false;
+		return intersect(outRecord, ray, false);
 		
 	}
 	
@@ -142,36 +147,36 @@ public class Scene {
 	}
 	
 	private boolean intersect(IntersectionRecord outRecord, Ray rayIn, boolean anyIntersection) {
-        // TODO#Ray Task 3:
-        //          1) Loop through all surfaces in the scene.
-        //          2) Intersect each with a copy of the given ray.
-        //          3) If there was an intersection, check the modified IntersectionRecord to see
-        //             if the object was hit by the ray sooner than any previous object.
-        //             Hint: modifying the end field of your local copy of ray might be useful here.
-        //          4) If anyIntersection is true, return immediately.
-        //          5) Set outRecord to the IntersectionRecord of the first object hit.
-        //          6) If there was an intersection, return true; otherwise return false.
-//	    System.out.println(rayIn.end);
-	    double tMin = rayIn.end;
-	    boolean intersection = false;
-	    IntersectionRecord tempRecord = new IntersectionRecord();
+        // // TODO#Ray Task 3:
+        // //          1) Loop through all surfaces in the scene.
+        // //          2) Intersect each with a copy of the given ray.
+        // //          3) If there was an intersection, check the modified IntersectionRecord to see
+        // //             if the object was hit by the ray sooner than any previous object.
+        // //             Hint: modifying the end field of your local copy of ray might be useful here.
+        // //          4) If anyIntersection is true, return immediately.
+        // //          5) Set outRecord to the IntersectionRecord of the first object hit.
+        // //          6) If there was an intersection, return true; otherwise return false.
+	    // double tMin = rayIn.end;
+	    // boolean intersection = false;
+	    // IntersectionRecord tempRecord = new IntersectionRecord();
 	    
-	    for(Surface surface1 : surfaces) {
-	        if(anyIntersection) {
-	            if(surface1.intersect(null, rayIn)) return true;
-	        } 
-	        else {
-//	        	if(intersection && tempRecord.t > tMin) {
-//	        	}
+	    // for(Surface surface1 : surfaces) {
+	    //     if(anyIntersection) {
+	    //         if(surface1.intersect(null, rayIn)) return true;
+	    //     } 
+	    //     else {
 	        	
-	            if(surface1.intersect(tempRecord, rayIn) && tempRecord.t < tMin) {
-                    tMin = tempRecord.t;
-	                outRecord.set(tempRecord);
-	                intersection = true;
-	            }
-	        }
-	    }
+	    //         if(surface1.intersect(tempRecord, rayIn) && tempRecord.t < tMin) {
+        //             tMin = tempRecord.t;
+	    //             outRecord.set(tempRecord);
+	    //             intersection = true;
+	    //         }
+	    //     }
+	    // }
 	
-		return intersection;
+		// return intersection;
+
+		// TODO#Ray Part 2: uncomment the following line, and comment your previous solution out.
+		return accelStruct.intersect(outRecord, rayIn, anyIntersection);
 	}
 }

@@ -60,9 +60,7 @@ public class TriangleTests {
         TestUtils.assertVector3dEqual(its.normal, expectedNormal);
         System.out.println("Testing intersection time.");
         expectedT = 2.4;
-        System.out.println(its.t);
         TestUtils.assertDoublesEqual(its.t, expectedT);
-        
         System.out.println("Testing intersection surface.");
         assertTrue(its.surface == expectedSurface);
         System.out.println("Ray 0 tests passed.\n");
@@ -169,7 +167,6 @@ public class TriangleTests {
         TestUtils.assertVector3dEqual(its.location, expectedLocation);
         System.out.println("Testing intersection normal.");
         expectedNormal.set(0.8464296715703657, 0.3541707236027082, 0.397642942384266);
-        System.out.println(its.normal);
         TestUtils.assertVector3dEqual(its.normal, expectedNormal);
         System.out.println("Testing intersection time.");
         expectedT = 6.45286788955112;

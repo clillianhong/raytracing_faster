@@ -1,7 +1,6 @@
 package ray1.surface;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 
 import ray1.OBJMesh;
@@ -51,18 +50,17 @@ public class Mesh extends Surface {
 	}
 	
 	public boolean intersect(IntersectionRecord outRecord, Ray rayIn) {	
-		System.out.println("entering intersect");
 		for(int i = 0; i< mesh.faces.size();i++) {
 			OBJFace tface = mesh.faces.get(i);
 			Triangle triangle = new Triangle(this, tface, this.shader);
 			if(triangle.intersect(outRecord, rayIn)) {
-				System.out.println("intersection");
 				return true;
 			}
 		}; 
 		return false;
 	}
 
+	public void computeBoundingBox() {	}
 
 	/**
 	* append the mesh surface to a surface ArrayList in.

@@ -38,13 +38,6 @@ public class CameraTests {
                                   new Vector3d(0.22730915261287413, -0.027671120744863338, 0.9734294315537928));
         Ray resultRay0 = new Ray();
         orthoCam.getRay(resultRay0, u, v);
-        System.out.println(correctRay0.origin);
-        System.out.println(correctRay0.direction);
-
-        System.out.println("heeelo");
-        System.out.println(resultRay0.origin);
-        System.out.println(resultRay0.direction);
-
         TestUtils.assertRaysEqual("Testing Orthographic camera: u = " + u + ", v = " + v, correctRay0, resultRay0);
 
         Ray correctRay1 = new Ray(new Vector3d(1.0, 0.5, 2.0),
