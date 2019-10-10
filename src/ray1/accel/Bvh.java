@@ -223,7 +223,7 @@ public class Bvh implements AccelStruct {
 		// Copy our array, sort that, then copy that array back to the original
 		SurfaceComparator comparator = new SurfaceComparator(widestDim);
 		Surface[] surfacesSlice = Arrays.copyOfRange(surfaces, start, end);
-		Arrays.sort(surfacesSlice, comparator);
+		Arrays.sort(surfacesSlice, cmp);
 		for(int i = start; i < end; i++) {
 			surfaces[i] = surfacesSlice[i - start];
 		}
