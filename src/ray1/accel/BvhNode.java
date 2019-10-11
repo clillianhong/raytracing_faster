@@ -85,6 +85,7 @@ public class BvhNode {
 	public boolean intersects(Ray ray) {
 		// TODO#Ray Part 2 Task 3: fill in this function.
 		// You can find this in the slides.
+	    ray.direction.normalize();
 		double txMin = (minBound.x - ray.origin.x) / ray.direction.x;
 		double tyMin = (minBound.y - ray.origin.y) / ray.direction.y;
 		double tzMin = (minBound.z - ray.origin.z) / ray.direction.z;

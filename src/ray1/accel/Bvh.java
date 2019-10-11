@@ -76,7 +76,7 @@ public class Bvh implements AccelStruct {
 		// If current node is not a leaf, call intersectHelper recursively for left and right child of the node, 
 		boolean intersection = false;
 		if(node.isLeaf()) {
-			double tMin = rayIn.end;
+			double tMin = rayIn.end; // Starts as the max, then we record the min found with this variable 
 			IntersectionRecord tempRecord = new IntersectionRecord();
 
 			for(Surface surface : surfaces) {
